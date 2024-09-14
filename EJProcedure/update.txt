@@ -1,0 +1,31 @@
+DELIMITER //
+create procedure update_data()
+begin
+update student set name="KC" where id=2;
+end //
+DELIMITER ;
+
+package test_1_2b;
+import java.sql.*;
+
+public class test_1_2B {
+
+    public static void main(String[] args) {
+           
+          try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/prac?zeroDateTimeBehavior=convertToNull","root","admin");
+        CallableStatement cs = con.prepareCall("call update_data()");
+     
+        int r = cs.executeUpdate();
+        cs.close();
+        con.close();
+        System.out.println("No. of row affected : "+ r);
+        System.out.println("Data Updated Successfully");
+        }
+        catch(Exception e ){
+             System.out.println("Error Message : " + e.getMessage());
+        }
+    }
+    
+}

@@ -1,0 +1,132 @@
+Index.xhtml
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+        <h3>Ambani, Mukesh</h3>
+
+        <h:form>
+            <h3>Enter Student ID to View Details</h3>
+
+            <h:outputLabel for="id" value="Student ID: " />
+            <h:inputText id="id" value="#{jsfselect.id}" /> <br/><br/>
+            <h:commandButton value="Display Details" action="#{jsfselect.display}" />
+        </h:form>
+        
+    </h:body>
+</html>
+
+
+Response.xhtml
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+        <h3>Student Details</h3>
+        <p><h:outputText value="Name: #{jsfselect.name}" /></p>
+        <p><h:outputText value="ID: #{jsfselect.id}" /></p>
+
+        <h:form>
+            <h:commandLink value="Back to Search" action="index.xhtml" />
+        </h:form>
+
+        <p><h:outputText value="#{jsfselect.message}" /></p>
+            </h:body>
+</html>
+
+
+Jsfselect.java
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package mypack;
+
+import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+
+/**
+ *
+ * @author mukesh
+ */
+@ManagedBean
+@RequestScoped
+public class jsfselect {
+
+    String name;
+    String id;
+    private String message;
+  
+    /**
+     * Creates a new instance of jsfselect
+     */
+    public jsfselect() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+    
+    
+    public String display() {
+      
+        try  {
+            Class.forName("com.mysql.jdbc.Driver"); 
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Mukesh1?", "root", "admin");
+            String sql = "SELECT * FROM student WHERE stud_id=?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+               // this.id = resultSet.getString("id");
+                this.name = resultSet.getString("stud_name");
+                message = "Student details loaded successfully!";
+            } 
+            else {
+                message = "Student not found!";
+            }
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+            message = "An error occurred: " + e.getMessage();
+        }
+
+        return "response";  // Navigate to displayStudent.xhtml
+    }
+}

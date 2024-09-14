@@ -1,0 +1,45 @@
+JSP Page
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h3>Ambani, Mukesh</h3>
+        <h3>All Formatting Tags </h3>
+       
+        <c:set var="number" value="123456" />
+        <c:set var="date" value="<%= new java.util.Date() %>" />
+        <c:set var="currencyValue" value="123456.789" />
+        
+        <p>Formatted Number (Default):
+            <fmt:formatNumber value="${number}" />
+        </p>
+
+        <p>Formatted Number (Integer): 
+            <fmt:formatNumber value="${number}" type="number" maxFractionDigits="0" />
+        </p>
+
+        <p>Formatted Number (Currency):
+            <fmt:formatNumber value="${currencyValue}" type="currency" />
+        </p>
+
+        <p>Formatted Date (Default):
+            <fmt:formatDate value="${date}" type="date" />
+        </p>
+
+        <p>Formatted Time (Default):
+            <fmt:formatDate value="${date}" type="time" />
+        </p>
+
+        <p>Formatted Date and Time: 
+            <fmt:formatDate value="${date}" type="both" />
+        </p>
+        
+    </body>
+</html>

@@ -1,0 +1,96 @@
+HTML Page
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+       <h2>Simple and Compound Interest</h2>
+    <form action="user" method="post">
+        <label for="principal">Principal:</label>
+        <input type="number" id="principal" name="principal" step="0.01" required><br><br>
+
+        <label for="rate">Rate of Interest (% per annum):</label>
+        <input type="number" id="rate" name="rate" step="0.01" required><br><br>
+
+        <label for="time">Time (in years):</label>
+        <input type="number" id="time" name="time" required><br><br>
+
+        <label for="frequency">Compounding Frequency (for compound interest):</label>
+        <input type="number" id="frequency" name="frequency" required><br><br>
+
+        <input type="submit" value="Calculate">
+    </form>
+
+    </body>
+</html>
+
+
+Java Page
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import ejbprac.interest;
+import javax.ejb.EJB;
+
+/**
+ *
+ * @author mukesh
+ */
+public class user extends HttpServlet {
+
+   @EJB
+   private interest interest1;
+   
+   @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter(); 
+        out.println("Ambani, Mukesh");
+         try{
+     
+            double principal = Double.parseDouble(request.getParameter("principal"));
+            double rate = Double.parseDouble(request.getParameter("rate"));
+            double time = Double.parseDouble(request.getParameter("time"));
+            int n = Integer.parseInt(request.getParameter("frequency"));
+
+            double simpleInterest = interest1.calculateSI(principal, rate, time);
+            double compoundInterest = interest1.calculateCI(principal, rate, time, n);
+
+            out.println("<br>Simple Interest: " + simpleInterest);
+            out.println("<br>Compound Interest: " + compoundInterest);
+            
+          }
+            catch(NumberFormatException e){
+           out.println(e.getMessage());
+       }
+    }        
+   }
+
+
+EJB Page
+
+package ejbprac;
+
+import javax.ejb.Stateless;
+
+@Stateless
+public class interest {
+
+    public Double calculateSI(double principal, double rate, double time) {
+        return (principal * rate * time) / 100;
+    }
+
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
+
+    public Double calculateCI(double principal, double rate, double time, int n) {
+        return principal * Math.pow((1 + rate / (n * 100)), n * time) - principal;
+    }
+}

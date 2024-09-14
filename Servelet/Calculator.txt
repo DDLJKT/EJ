@@ -1,0 +1,74 @@
+HTML package
+<html>
+    <head>
+        <title>Calculator</title>
+    </head>
+    <body>
+        <form action="something" method="get">
+            <input type="text" name="n1">
+            <input type="text" name="n2">
+           <input type="submit" value="add" name="add">
+            <input type="submit" value="sub" name="sub">
+            <input type="submit" value="mul" name="mul">
+            <input type="submit" value="div" name="div">
+
+        </form>
+    </body>
+</html>
+
+
+Java file
+package ServletPackage;
+import java.sql.*;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+
+public class something extends HttpServlet {
+
+   public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out=response.getWriter();
+        out.println("test Patel");
+          try {
+            
+            String n1 = request.getParameter("n1");
+            String n2 = request.getParameter("n2");
+            float num1 = Integer.parseInt(n1);
+            float num2 = Integer.parseInt(n2);
+            
+            String add = request.getParameter("add");
+            String sub = request.getParameter("sub");
+            String mul = request.getParameter("mul");
+            String div = request.getParameter("div");
+             if (add!=null) {
+                float num3 = num1 + num2;
+                out.println(num1 + " + " + num2 + " = "+ num3);
+                
+            }
+            if (sub!=null) {
+                float num3 = num1 - num2;
+                out.println(num1 + " - " + num2 + " = "+ num3);
+                
+            }
+            if (mul!=null) {
+                float num3 = num1 * num2;
+                out.println(num1 + " * " + num2 + " = "+ num3);
+                
+            }
+            if (div!=null) {
+                float num3 = num1 / num2;
+                out.println(num1 + " / " + num2 + " = "+ num3);
+                
+            }
+        }
+           catch(Exception e) {
+            out.println(e.getMessage());
+           }       
+}
+
+}
+
+

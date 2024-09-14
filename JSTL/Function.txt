@@ -1,0 +1,60 @@
+JSP Page
+
+<%-- 
+    Document   : jstlfunctions
+    Created on : 31 Aug, 2024, 9:11:39 PM
+    Author     : mukesh
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h3>Ambani, Mukesh</h3>
+        <h3>All Function Tags </h3>
+        
+        <c:set var="str" value="Hello, JSTL functions!" />
+        <c:out value="String: ${str}"></c:out>
+        
+        <c:if test="${fn:contains(str, 'Hello')}">  
+        <p>Found hello string<p>  
+        </c:if>  
+        
+        <c:if test="${fn:containsIgnoreCase(str, 'HELLO')}">  
+        <p>Found HELLO string<p>  
+        </c:if>  
+  
+        <c:if test="${fn:endsWith(str, 'functions!')}">  
+           <p>String ends with functions!<p>  
+        </c:if> 
+
+        <c:if test="${fn:startsWith(str, 'Hello')}">  
+             <p>String starts with Hello<p>  
+         </c:if> 
+        
+        <p>Length of string: <c:out value="${fn:length(str)}" /></p>
+        
+        <p>Substring (start at 7, end at 11): <c:out value="${fn:substring(str, 7, 11)}" /></p
+        
+        <c:set var="xmlStr" value="It is <abc>second String</abc>" />
+        <p>Escaped XML: <c:out value="${fn:escapeXml(xmlStr)}" /></p>
+        
+        <p>Index of 'JSTL' in string: <c:out value="${fn:indexOf(str, 'JSTL')}" /></p>
+        
+        <p>Replace 'JSTL' with 'Java': <c:out value="${fn:replace(str, 'JSTL', 'Java')}" /></p>
+        
+        <p>Uppercase string: <c:out value="${fn:toUpperCase(str)}" /></p>
+        <p>Lowercase string: <c:out value="${fn:toLowerCase(str)}" /></p>
+    
+        <c:set var="str" value="java  programming" />
+        <c:set var="str1" value="${fn:split(str,' ')}" />
+        <c:out value="${fn:join(str1,'-')}" />
+
+    </body>
+</html>

@@ -1,0 +1,59 @@
+Html file 
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+       
+         <form method="get" action="HelloWorld">
+             <input type="text" name="t1">
+             <input type ="text" name="t2">
+            <input type="submit" value="Submit">
+         </form>
+    
+    </body>
+</html>
+
+Java File
+
+package ServletPackage;
+import java.sql.*;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+
+public class HelloWorld extends HttpServlet {
+
+   public void doGet(HttpServletRequest req, HttpServletResponse res)
+            throws ServletException, IOException {
+        res.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = res.getWriter();
+        String str1 = req.getParameter("t1");
+        //String str2 = req.getParameter("t2");
+        out.print("Received ID: " + str1 + "<br>");
+        
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb", "root", "admin");
+            PreparedStatement ps = con.prepareStatement("DELETE FROM users WHERE id = ?");
+            ps.setString(1, str1); 
+            int r = ps.executeUpdate();
+            if (r > 0) {
+                out.println("Student with ID " + str1 + " deleted successfully");
+                
+            } else {
+                out.println("No student found with ID " + str1);
+              }
+        } catch (Exception e) {
+            out.print("Error: " + e.getMessage() + "<br>");
+        }
+    }
+
+@Override
+    public String getServletInfo() {
+        return "Servlet for deleting users data";
+}
+}

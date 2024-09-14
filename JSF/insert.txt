@@ -1,0 +1,125 @@
+XHTML Page
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+    <h:form>
+        <h3>Ambani, Mukesh</h3>
+        <h3>Enter Student Details</h3>
+
+        <h:outputLabel for="id" value="ID: " />
+        <h:inputText id="id" value="#{jsfinsert.id}" />
+        <br/><br/>
+
+        <h:outputLabel for="name" value="Name: " />
+        <h:inputText id="name" value="#{jsfinsert.name}" />
+        <br/><br/>
+
+        <h:commandButton value="Save" action="#{jsfinsert.save}" />
+    </h:form>
+        
+    </h:body>
+</html>
+
+
+Response.xhtml
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h3>Insertion Results</h3>
+        <p><h:outputText value="#{jsfinsert.message}" /></p>
+        <h:form>
+        <h:commandLink value="Back to Form" action="insert.xhtml" />
+        </h:form>
+    </h:body> </html>
+
+
+Jsfinsert.java
+
+package mypack;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import java.sql.*;
+
+/**
+ *
+ * @author mukesh
+ */
+@ManagedBean
+@RequestScoped
+public class jsfinsert {
+
+    String name;
+    String id;
+    private String message;
+    
+    public jsfinsert() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    
+    public String save() {
+
+        try  {
+            Class.forName("com.mysql.jdbc.Driver"); 
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Mukesh1?", "root", "admin");
+            String sql = "INSERT INTO student (stud_id, stud_name) VALUES (?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, id);
+            statement.setString(2, name);
+           
+
+            int rs = statement.executeUpdate();
+            if (rs > 0) {
+                message = "Student inserted successfully!";
+            } 
+            else {
+                message = "Failed to save student.";
+            }
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+            message = "An error occurred: " + e.getMessage();
+        }
+
+        return "response"; // Navigate to response.xhtml
+    }
+}

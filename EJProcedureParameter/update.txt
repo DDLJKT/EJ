@@ -1,0 +1,36 @@
+DELIMITER //
+
+CREATE PROCEDURE update_detail(IN id INT, IN name VARCHAR(255))
+BEGIN
+    UPDATE student SET name = name WHERE id = id;
+END//
+
+DELIMITER ;
+
+
+package test_1_1a;
+import java.sql.*;
+
+public class test_1_1A {
+
+       public static void main(String[] args) {
+           
+          try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb","root","admin");
+        CallableStatement cs = con.prepareCall("call update_detail(?,?)");
+        cs.setInt(1,1);
+        cs.setString(2, "Rohan Bera");
+       
+        int r = cs.executeUpdate();
+        cs.close();
+        con.close();
+        System.out.println("No. of row affected : 1");
+        System.out.println("Data Updated Successfully");
+        }
+        catch(Exception e ){
+             System.out.println("Error Message : " + e.getMessage());  
+      }
+}
+
+}

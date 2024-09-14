@@ -1,0 +1,87 @@
+7B AND 7C (create login page wala and modification to type 3 times the password othrwise block)
+
+HTML File 
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="nothing" method="post">
+            <input type="text" name="uname" placeholder="Username">
+            <input type="text" name="pass" placeholder="Password">
+            <input type="submit" value="submit" >
+            
+        </form>
+    </body>
+</html>
+
+
+Java File
+package ServletPackage;
+
+import java.io.*;
+import java.sql.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+
+public class nothing extends HttpServlet {
+
+    
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            HttpSession session = request.getSession();
+            Integer attempts = (Integer) session.getAttribute("loginAttempts");
+            if (attempts == null) {
+                attempts = 0;
+            }
+
+            if (attempts >= 3) {
+                out.println("You have exceeded the maximum number of login attempts.");
+                return;
+            }
+
+            String n1 = request.getParameter("uname");
+            String n2 = request.getParameter("pass");
+
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/musty39", "root", "enterenter");
+                     PreparedStatement ps = con.prepareStatement("SELECT * FROM data");
+                     ResultSet rs = ps.executeQuery()) {
+
+                    boolean found = false;
+                    while (rs.next()) {
+                        if (rs.getString("user").equals(n1) && rs.getString("pass").equals(n2)) {
+                            out.println("Login successful");
+                            session.setAttribute("loginAttempts", 0); // Reset the attempt counter on successful login
+                            found = true;
+                            
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        attempts++;
+                        session.setAttribute("loginAttempts", attempts);
+                        if (attempts < 3) {
+                            out.println("<form action='nothing' method='post'>");
+                            out.println("<input type='text' name='uname' placeholder='Username'>");
+                            out.println("<input type='password' name='pass' placeholder='Password'>");
+                            out.println("<input type='submit' value='Submit'>");
+                            out.println("</form>");
+                            out.println("Login failed. Attempt " + attempts + " of 3.");
+                        } else {
+                            out.println("You have exceeded the maximum number of login attempts.");
+                        }
+                    }
+                }
+            } catch (ClassNotFoundException | SQLException e) {
+                out.println("Error: " + e.getMessage());
+            }
+        }
+    }
+}

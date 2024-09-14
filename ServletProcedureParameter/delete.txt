@@ -1,0 +1,71 @@
+SQL Query
+DELIMITER //
+CREATE PROCEDURE deletedetail(IN id INT)
+BEGIN
+    DELETE FROM emp WHERE id = id;
+END//
+DELIMITER ;
+
+HTML File
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+       
+         <form method="get" action="HelloWorld">
+             <input type="text" name="t1">
+            <input type="text" name="t2"> 
+            <input type="submit" value="Submit">
+         </form>
+    
+    </body>
+</html>
+
+java file
+package ServletPackage;
+import java.sql.*;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+
+public class HelloWorld extends HttpServlet {
+
+   public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out=response.getWriter();
+        String str1 = request.getParameter("t1");
+        String str2 = request.getParameter("t2");
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb","root","admin");
+      
+        CallableStatement cs = con.prepareCall("call deletedetail(?)");
+        cs.setInt(1, 6);
+    
+        int r = cs.executeUpdate();
+        cs.close();
+        con.close();
+        
+       out.println("Data Deleted Successfully");
+        }
+        catch(Exception e ){
+          out.println("Error Message : " + e.getMessage());  
+     }
+}
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "Servlet for DELETE user data";
+    }
+}
+
+    
+
+
+

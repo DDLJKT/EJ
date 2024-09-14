@@ -1,0 +1,95 @@
+JSP Page
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h2>Ambani, Mukesh</h2>
+        <h2>Calculate Monthly EMI</h2>
+        <form action="calculateEMI" method="post">
+        <label for="principal">Principal Loan Amount:</label>
+        <input type="number" id="principal" name="principal" step="0.01" required><br><br>
+
+        <label for="interestRate">Annual Interest Rate (%):</label>
+        <input type="number" id="interestRate" name="interestRate" step="0.01" required><br><br>
+
+        <input type="submit" value="Calculate EMI">
+    </form>
+
+    </body>
+</html>
+
+
+Java Page
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import emipack.EMIbean;
+import javax.ejb.EJB;
+
+/**
+ *
+ * @author mukesh
+ */
+public class calculateEMI extends HttpServlet {
+
+    @EJB
+    private EMIbean emibean;
+   
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out=response.getWriter();
+        try {
+        out.println("Ambani, Mukesh");
+        double principal = Double.parseDouble(request.getParameter("principal"));
+        double interestRate = Double.parseDouble(request.getParameter("interestRate"));
+
+        int tenureMonths = 60; // Loan tenure is fixed at 60 months
+        double emi = emibean.calculateEMI(principal, interestRate, tenureMonths);
+
+        out.println("Monthly EMI is: " + String.format("%.2f",emi));
+        }
+        catch(NumberFormatException e) {
+            out.println(e.getMessage());
+        }     
+    }
+}
+
+
+Beans Page 
+
+package emipack;
+
+import javax.ejb.Stateless;
+
+/**
+ *
+ * @author mukesh
+ */
+@Stateless
+public class EMIbean {
+
+    public double calculateEMI(double principal, double annualInterest, int tenure) {
+      
+        double monthlyInterest = (annualInterest / 100) / 12;
+        double emi = (principal * monthlyInterest * Math.pow(1 + monthlyInterest, tenure)) / 
+                (Math.pow(1 + monthlyInterest, tenure) - 1);
+
+        return emi;
+}
+
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
+}
+
+
+
+

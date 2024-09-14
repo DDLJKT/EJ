@@ -1,0 +1,74 @@
+JSP Page
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h3>Student Registration Form</h3>
+        <h3>Ambani, Mukesh</h3>
+        <form action="dispatcher.jsp" method = "post">
+            Student Name: <input type="text" name="sname"><br>
+            Gender:<br>
+            <input type="radio" id="gender" name="gender" value="Male">Male<br>
+            <input type="radio" id="gender" name="gender" value="Female">Female<br><br>
+            <label for ="city">City :</label>
+            <select name="city" id="city">
+                <<option value="mumbai">Mumbai</option>
+                <option value="pune">Pune</option>
+                <option value="nagpur">Nagpur</option>
+                <option value="nashik">Nashik</option>
+                <option value="aurangabad">Aurangabad</option>
+                <option value="kohlapur">Kolhapur</option>
+                <option value="solapur">Solapur</option>
+                <option value="amravati">Amravati</option>
+                <option value="jalgaon">Jalgaon</option>
+                <option value="Thane">Thane</option>
+            </select><br><br>
+            Hobby :<br>
+            <input type="checkbox" id="drawing" name="hobby" value="drawing">Drawing<br>
+            <input type="checkbox" id="reading" name="hobby" value="reading">Reading<br>
+            <input type="checkbox" id="dancing" name="hobby" value="dancing">Dancing<br>
+            <input type="checkbox" id="sports" name="hobby" value="sports">Sports<br>
+            <input type="checkbox" id="music" name="hobby" value="music">Music<br><br>
+            Address: <br><textarea name="address" id="address" rows="4" column="60"></textarea><br><br>
+            
+            <input type="submit" value="Submit">
+        </form>
+    </body>
+</html>
+
+
+Dispatcher.jsp
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h2>Student Information</h2>
+        <p>Student Name: <%= request.getParameter("sname") %></p>
+        <p>Gender: <%= request.getParameter("gender") %></p>
+        <p>City: <%= request.getParameter("city") %></p>
+        <p>Hobbies: 
+            <%
+                String[] hobbies = request.getParameterValues("hobby");
+                if (hobbies != null) {
+                    for (String hobby : hobbies) {
+                        out.println(hobby + " ");
+                    }
+                } else {
+                    out.println("None");
+                }
+            %>
+        </p>
+        <p>Address: <%= request.getParameter("address") %></p>
+    </body>
+</html>
+

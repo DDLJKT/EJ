@@ -1,0 +1,69 @@
+JSP Page
+
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h3>Ambani, Mukesh</h3>
+        <h3>Login form</h3>
+        <form method = "get" action="loginmanager.jsp">
+            Username : <input type="text" name="uname"><br><br>
+            Password : <input type="text" name="pass"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+    </body>
+</html>
+
+
+loginmanager.jsp
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <%@page import="java.sql.*" %>
+        <%
+            String uname = request.getParameter("uname");
+            String pass = request.getParameter("pass");
+            try{
+               Class.forName("com.mysql.jdbc.Driver");
+               Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/jsptables?", "root", "admin");
+               PreparedStatement ps = conn.prepareStatement("SELECT username FROM users WHERE username = ? AND password = ?");
+               ps.setString(1,uname);
+               ps.setString(2,pass);
+               ResultSet rs = ps.executeQuery();
+               if(rs.next()){
+                   RequestDispatcher rd = request.getRequestDispatcher("welcome.jsp");
+                   rd.forward(request, response);
+               }
+               else{
+                   response.sendRedirect("loginform.jsp");
+               }
+            }catch(Exception e){
+               out.println(e.getMessage());
+            }
+        %>
+    </body>
+</html>
+
+
+welcome.jsp
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Welcome <%= request.getParameter("uname")%>!</h1>
+    </body>
+</html>
